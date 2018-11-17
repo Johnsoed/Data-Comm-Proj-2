@@ -25,4 +25,4 @@ Central Server:
 
 
 
-
+Edward: HostClient collects username, hostname, and speed, and list of files (in string form) from its directory and sends them to CentralServer
