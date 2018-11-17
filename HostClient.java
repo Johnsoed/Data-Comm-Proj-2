@@ -4,7 +4,7 @@ import java.util.*;
 import java.text.*;
 import java.lang.*;
 import javax.swing.*;
-class FTPClient {
+class HostClient {
 
     public static void main(String argv[]) throws Exception {
 	String sentence;
