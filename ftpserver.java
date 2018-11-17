@@ -75,14 +75,18 @@ class ClientHandler extends Thread
 			hostName = tokens.nextToken();
 			speed = tokens.nextToken();
 			System.out.println(userName + " " + hostName + " " + speed);
-			fromClient = inFromClient.readLine();
         
+            String fileString = inFromClient.readLine();
+            System.out.println(fileString);
+        
+        
+			fromClient = inFromClient.readLine();
 			System.out.println(fromClient);
             StringTokenizer commandTokens = new StringTokenizer(fromClient);
 			frstln = commandTokens.nextToken();
 			port = Integer.parseInt(frstln);
 			clientCommand = commandTokens.nextToken();
-			BufferedReader dataInFromClient;
+
 
             if (clientCommand.equals("list")) {
                 System.out.println("Listing files...");

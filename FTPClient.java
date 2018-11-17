@@ -51,10 +51,19 @@ class FTPClient {
 			hostName = inFromUser.readLine();
 			System.out.print("enter speed: ");
 			speed = inFromUser.readLine();
-			
 			initialMessage = userName + " " + hostName + " " + speed + '\n';
 			outToServer.writeBytes(initialMessage);
+			
+			String listFiles = getFiles();
+            listFiles = listFiles + '\n';
+            outToServer.writeBytes(listFiles);
+            
+			
+			
 			sentence = "quit";
+			
+			
+			
 			
 			
 			if (sentence.equals("list")) {
@@ -130,4 +139,22 @@ class FTPClient {
 	    System.exit(1);
 	}
     }
+    
+    private static String getFiles() {
+        String files = "";
+        File cwd = new File(".");
+
+        File[] filesList = cwd.listFiles();
+        if (filesList.length == 0) {
+            return "No files available.";
+        } else {
+            for (File f : filesList) {
+                if (f.isFile()) {
+                    files = files + f.getName() + " ";
+                }
+            }
+            return files;
+        }
+    }
+    
 }
