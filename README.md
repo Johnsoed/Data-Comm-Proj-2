@@ -1,28 +1,30 @@
 # Data-Comm-Proj-2
 
+Looking at the project requirements again, there were a  few things I interpretated incorrectly. I updated the to-do list with how I currently plan to implement the features. -Edward
+
 To do:
 
 Host:
 -Create p2p hosts that have both client and server functionality and can download from eachother
 
--have it read the files in its directory, save the list to a file, and send the list of files to the central server
-
 -Create a gui for the p2p hosts that allow you to enter in the information used by server and use the search
 
 -send that information for use by the central server
 
--create a panel on our host GUI to display the table returned by the central server after searching
-(object sockets seem to the be the easiest solution for sending and receiving tables) 
+-have it read a text file containing the names of the files in the directory and their descriptions and send them to the central server
+
+-create a panel on our host GUI table to display the entries returned by the central server after a keyword search
+(possibly sending the entries back in the form of an object arraylist, with each object containg the information for each row of the table) 
 
 Central Server:
 
--After a host connects, collects information to be used in table from host
+-After a host connects, collects information sent by host to be stored in user table 
 
--Stores information in table that can be saved and reopened when the program closes
+-takes list of files and their descriptions, and stores them (also possibly as an object arraylist, with each object containing the file name and description as string values)
 
--returns sub-table of results after being sent a search term by host, returns table to host(use row filter for search)
-
-
+-searches through file descriptions for keywords, and returns relevant entries back to the host along with hostname and username of uploader
 
 
-Edward: HostClient collects username, hostname, and speed, and list of files (in string form) from its directory and sends them to CentralServer
+
+Current state of project:
+HostClient collects username, hostname, and speed, and list of files (in string form) from its directory and sends them to CentralServer - Edward
