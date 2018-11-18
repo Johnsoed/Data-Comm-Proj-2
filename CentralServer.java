@@ -1,7 +1,9 @@
+package mainServer;
+
 import java.io.*; 
 import java.net.*;
 import java.util.*;
-
+import mainServer.User;
 
 class CentralServer {
 
@@ -9,6 +11,7 @@ class CentralServer {
 
 	ServerSocket welcomeSocket;
 	int port = 12000;
+
 
 	try
 	    {
@@ -43,11 +46,13 @@ class ClientHandler extends Thread
     private String userName;
     private String hostName;
     private String speed;
+    String fileLine;
     private byte[] data;
     private String frstln;
     private Boolean closed = false;
     private Socket connectionSocket;
     private int port;
+    ArrayList<User> userList = new ArrayList<User>();
 	
     public ClientHandler(Socket socket) {
 
@@ -70,14 +75,44 @@ class ClientHandler extends Thread
 		do
 		    {
 			initialMessage = inFromClient.readLine();
+
+            File userTable = new File("userTable.txt");
+            boolean exists = userTable.exists();
+			if (exists == true){
+			FileInputStream tableContents = new FileInputStream(userTable);
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(tableContents));
+            while ((fileLine = fileReader.readLine()) != null) {
+                StringTokenizer tableTokens = new StringTokenizer(fileLine);
+                userName = tableTokens.nextToken();
+                hostName = tableTokens.nextToken();
+                speed = tableTokens.nextToken();
+                userList.add( new User(userName,hostName,speed) );
+			}
+			tableContents.close();
+			}
+			
 			StringTokenizer tokens = new StringTokenizer(initialMessage);
 			userName = tokens.nextToken();
 			hostName = tokens.nextToken();
 			speed = tokens.nextToken();
-			System.out.println(userName + " " + hostName + " " + speed);
-        
+			userList.add( new User(userName,hostName,speed) );
+			
+			
+			for (int i = 0; i < userList.size(); i++){
+                System.out.println(userList.get(i));
+			}
+            System.out.println(userList.size());
             String fileString = inFromClient.readLine();
             System.out.println(fileString);
+        
+            String tempString;
+            FileWriter userTableWriter = new FileWriter("userTable.txt");
+            for (int i = 0; i < userList.size(); i++){
+                tempString = userList.get(i) + "" + '\n';
+                userTableWriter.write(tempString);
+            }
+            userTableWriter.flush();
+        
         
         
 			fromClient = inFromClient.readLine();
