@@ -46,6 +46,7 @@ class ClientHandler extends Thread
     private String userName;
     private String hostName;
     private String speed;
+    private Boolean inTable = false;
     String fileLine;
     private byte[] data;
     private String frstln;
@@ -53,6 +54,7 @@ class ClientHandler extends Thread
     private Socket connectionSocket;
     private int port;
     ArrayList<User> userList = new ArrayList<User>();
+    ArrayList<String> hostList = new ArrayList<String>();
 	
     public ClientHandler(Socket socket) {
 
@@ -87,16 +89,30 @@ class ClientHandler extends Thread
                 hostName = tableTokens.nextToken();
                 speed = tableTokens.nextToken();
                 userList.add( new User(userName,hostName,speed) );
+                hostList.add(hostName);
 			}
 			tableContents.close();
 			}
+			
+			
 			
 			StringTokenizer tokens = new StringTokenizer(initialMessage);
 			userName = tokens.nextToken();
 			hostName = tokens.nextToken();
 			speed = tokens.nextToken();
-			userList.add( new User(userName,hostName,speed) );
 			
+            if(hostList.contains(hostName)){
+                inTable = true;
+            }
+ 
+            System.out.println(inTable);
+            
+
+			
+			
+			if(inTable == false){
+                userList.add( new User(userName,hostName,speed) );
+			}
 			
 			for (int i = 0; i < userList.size(); i++){
                 System.out.println(userList.get(i));
