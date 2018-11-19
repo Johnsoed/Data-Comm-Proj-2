@@ -173,7 +173,9 @@ class ClientHandler extends Thread
 					ourFileName = parts[0];
 					description = parts[1];
 					fileHostName = hostName;
-                	sharedFileList.add( new SharedFile(ourFileName,description,fileHostName) );
+					if (inTable == false){
+                        sharedFileList.add( new SharedFile(ourFileName,description,fileHostName) );
+                        }
 					}
 				} while(modifiedSentence != null);
 			dataSocket.close();
@@ -214,23 +216,25 @@ class ClientHandler extends Thread
 
 		
 		    } while (!clientCommand.equals("quit"));
-	    }
-	catch(IOException ioEx)
-	    {
-		ioEx.printStackTrace();
-	    }
-	try
-	    {
+	    
+
 		if (connectionSocket != null)
 		    {
 			String inetadd = "" + connectionSocket.getInetAddress();
 			System.out.println("\n" + inetadd.substring(1) + " has disconnected");
 			connectionSocket.close();
 		    }
-	    }
-	catch (IOException ioEX)
+        }
+	catch (Exception ioEX)
 	    {
-		System.out.println("Unable to disconnect.");
+			String inetadd = "" + connectionSocket.getInetAddress();
+			System.out.println("\n" + inetadd.substring(1) + " has disconnected");
+			try {
+			connectionSocket.close();
+			}
+			catch (IOException disEX){
+			System.out.println("unable to disconnect");
+			}
 	    }
     }
 
