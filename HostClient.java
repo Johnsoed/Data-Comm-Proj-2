@@ -1,128 +1,88 @@
-import java.io.*; 
+package edu.gvsu.cs351.conversion;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.text.*;
 import java.lang.*;
 import javax.swing.*;
-class HostClient {
+public class HostClient {
 
-    public static void main(String argv[]) throws Exception {
-	String sentence;
-	String userName;
-	String hostName;
-	String speed;
-	String modifiedSentence = "";
-	String initialMessage;
-	boolean isOpen = true;
-	int number = 1;
-	boolean notEnd = true;
-	String statusCode;
-	boolean clientgo = true;
-	int port = 12000;
-	String serverName;
-	int connectPort;
-	Socket ControlSocket = null;
-	
-	BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-	System.out.println("To connect to server, enter \"connect\" followed by the server's IP and port.");
+    private Socket ControlSocket;
 
-	sentence = inFromUser.readLine();
-	StringTokenizer tokens = new StringTokenizer(sentence);
 
-	if(sentence.startsWith("connect ")) {
-	    serverName = tokens.nextToken(); //passes connect command
-	    serverName = tokens.nextToken();
-	    connectPort = Integer.parseInt(tokens.nextToken());
+    public void createa(String ips, String ports, String users, String hosts, String speeds) {
+        String sentence;
+        String userName;
+        String hostName;
+        String speed;
+        String modifiedSentence = "";
+        String initialMessage;
+        boolean isOpen = true;
+        int number = 1;
+        boolean notEnd = true;
+        String statusCode;
+        boolean clientgo = true;
+        int port = 12000;
+        String serverName;
+        int connectPort;
+        ControlSocket = null;
 
-	    try
-		{
-		    ControlSocket = new Socket(serverName, connectPort);
-
-		    System.out.println("You are now connected to " + serverName);
-
-		    do {
-
-			DataOutputStream outToServer = new DataOutputStream(ControlSocket.getOutputStream());
-
-			DataInputStream inFromServer = new DataInputStream(new BufferedInputStream(ControlSocket.getInputStream()));
-			System.out.print("enter unsername: ");
-			userName = inFromUser.readLine();
-			System.out.print("enter hostname: ");
-			hostName = inFromUser.readLine();
-			System.out.print("enter speed: ");
-			speed = inFromUser.readLine();
-			initialMessage = userName + " " + hostName + " " + speed + '\n';
-			outToServer.writeBytes(initialMessage);
-
-				
-			File sharedF = new File("sharedFiles.txt");
-			FileInputStream fileContents = new FileInputStream(sharedF);
-			BufferedReader fileReader = new BufferedReader(new InputStreamReader(fileContents));
-			port = port + 2;
- 			outToServer.writeBytes(port + "" + '\n');
-			ServerSocket sendData = new ServerSocket(port);
-			Socket dataSocket = sendData.accept();
-			System.out.println("Data Socket opened.");
-			DataOutputStream dataOutToServer = new DataOutputStream(dataSocket.getOutputStream());
-			String fileLine;
-			while ((fileLine = fileReader.readLine()) != null) {
-					fileLine = (fileLine + "\n");
-					dataOutToServer.writeBytes(fileLine);
-					}
-
-			dataSocket.close();
-			fileContents.close();
-			sendData.close();
-			
-			
-			sentence = "quit";
-			
-			
-			
-			
-			
-			if (sentence.equals("list")) {
+        BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
 
 
-			} 
-				
-				else if (sentence.startsWith("retr ")) {
 
 
-	        	} 
 
-			else if (sentence.equals("quit")) {
-                    System.out.print("qutting");
-                    outToServer.writeBytes(port + " " + sentence + " " + '\n');
-                    isOpen = false;
-				}
-		    } while (isOpen);
-		}
-	    catch (IOException ioEx)
-		{
-		    ioEx.printStackTrace();
-		}
-	    finally
-		{
-		    try
-			{
-			    System.out.println("\nClosing connection...");
-			    ControlSocket.close();
-			}
-		    catch (IOException ioEx)
-			{
-			    System.out.println("Unable to disconnect.");
-			    System.exit(1);
-			}
-		}
+            serverName = ips;
+            connectPort = Integer.parseInt(ports);
 
-	} else {
-	    System.out.println("Must enter \"connect\" to connect to server.");
-	    System.exit(1);
-	}
+            try {
+                ControlSocket = new Socket(serverName, connectPort);
+
+                System.out.println("You are now connected to " + serverName);
+
+
+
+                    DataOutputStream outToServer = new DataOutputStream(ControlSocket.getOutputStream());
+
+                    DataInputStream inFromServer = new DataInputStream(new BufferedInputStream(ControlSocket.getInputStream()));
+                    userName = users;
+                    hostName = hosts;
+                    speed = speeds;
+                    initialMessage = userName + " " + hostName + " " + speed + '\n';
+                    outToServer.writeBytes(initialMessage);
+
+
+                    File sharedF = new File("sharedFiles.txt");
+                    FileInputStream fileContents = new FileInputStream(sharedF);
+                    BufferedReader fileReader = new BufferedReader(new InputStreamReader(fileContents));
+                    port = port + 2;
+                    outToServer.writeBytes(port + "" + '\n');
+                    ServerSocket sendData = new ServerSocket(port);
+                    Socket dataSocket = sendData.accept();
+                    System.out.println("Data Socket opened.");
+                    DataOutputStream dataOutToServer = new DataOutputStream(dataSocket.getOutputStream());
+                    String fileLine;
+                    while ((fileLine = fileReader.readLine()) != null) {
+                        fileLine = (fileLine + "\n");
+                        dataOutToServer.writeBytes(fileLine);
+                    }
+
+                    dataSocket.close();
+                    fileContents.close();
+                    sendData.close();
+
+
+
+
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+            }
+
+
     }
-    
+
     private static String getFiles() {
         String files = "";
         File cwd = new File(".");
@@ -139,5 +99,39 @@ class HostClient {
             return files;
         }
     }
-    
+
+    public void closeserver(){
+        try {
+            ControlSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String commands(String sentence) {
+       if (sentence.startsWith("connect")) {
+
+
+           return "Connected to "+ sentence.subSequence(sentence.lastIndexOf(" "),sentence.length() -1);
+        }
+
+        else if (sentence.startsWith("retr ")){
+
+            return "Successfully downloaded " + sentence.subSequence(sentence.lastIndexOf(" "),sentence.length() );
+        }
+
+        else if (sentence.equals("quit")) {
+
+
+           return "Disconnected from server";
+        }
+        else
+        {
+            return "invalid command";
+        }
+
+    }
+
+
 }
