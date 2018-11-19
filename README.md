@@ -9,7 +9,7 @@ To do:
 
 -Integrate HostClient into GUI, so the user can use the GUI to give the HostClient the information to send to the CentralServer
 
--make CentralServer save file information (with the hostname of the file's owner) into a textfile
+-make CentralServer save collected file information (with the hostname of the file's owner) into a textfile which will be uploaded each time a unique hostname connects to the server
 
 -use this to populate an arraylist of SharedFile objects, each object containing relevant file information
 
