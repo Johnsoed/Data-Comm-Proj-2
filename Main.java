@@ -60,7 +60,7 @@ public class Main implements ActionListener {
                 search.addActionListener(this::actionPerformed);
                 Keyword = new JLabel("Keyword:");
                 key = new JTextField();
-                String[] columnNames = {"Speed" , "HostName", "FileName"};
+                String[] columnNames = {"FileName" , "HostName", "Speed"};
                 Object [] [] temp = new Object[][]{};
                 storage = new DefaultTableModel(temp,columnNames);
                 database = new JTable(storage);
@@ -268,7 +268,16 @@ public class Main implements ActionListener {
             for( int y = 0; y < x; y++){
                 storage.removeRow(y);
             }
-            command.setText("");
+            ArrayList<String> table= hostClient.Search(searchwrod);
+            for(int y = 0; y < table.size(); y++){
+
+                String temp = table.get(y);
+                String one = temp.substring(0,temp.indexOf(" "));
+                String two = temp.substring(temp.indexOf(" "), temp.lastIndexOf(" "));
+                String three =temp.substring(temp.lastIndexOf(" "), temp.length());
+                Object[] store = new Object[]{one, two, three};
+                storage.addRow(store);
+            }
             frame.invalidate();
             frame.validate();
             frame.repaint();

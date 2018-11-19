@@ -8,6 +8,8 @@ import javax.swing.*;
 public class HostClient {
 
     private Socket ControlSocket;
+    private int port;
+    private DataOutputStream outToServer;
 
 
     public void createa(String ips, String ports, String users, String hosts, String speeds) {
@@ -22,7 +24,7 @@ public class HostClient {
         boolean notEnd = true;
         String statusCode;
         boolean clientgo = true;
-        int port = 12000;
+        port = 12000;
         String serverName;
         int connectPort;
         ControlSocket = null;
@@ -44,7 +46,7 @@ public class HostClient {
 
 
 
-                    DataOutputStream outToServer = new DataOutputStream(ControlSocket.getOutputStream());
+                    outToServer = new DataOutputStream(ControlSocket.getOutputStream());
 
                     DataInputStream inFromServer = new DataInputStream(new BufferedInputStream(ControlSocket.getInputStream()));
                     userName = users;
@@ -131,6 +133,32 @@ public class HostClient {
             return "invalid command";
         }
 
+    }
+    public ArrayList<String> Search(String key) {
+        ArrayList<String> searchArray = new ArrayList<String>();
+        try {
+            port = port + 2;
+            searchArray.clear();
+            outToServer.writeBytes(port + " search " + key + " " + '\n');
+            ServerSocket welcomeSearch = new ServerSocket(port);
+            Socket searchResultSocket = welcomeSearch.accept();
+            DataInputStream inResults = new DataInputStream(new BufferedInputStream(searchResultSocket.getInputStream()));
+            String searchString;
+            do {
+                searchString = inResults.readLine();
+                if (searchString != null) {
+                    searchArray.add(searchString);
+
+                }
+            } while (searchString != null);
+            welcomeSearch.close();
+
+
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+
+        return searchArray;
     }
 
 
