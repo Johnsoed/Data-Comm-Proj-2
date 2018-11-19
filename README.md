@@ -7,6 +7,13 @@ HostClient now also sends the information for a textfile containing a list of fi
 
 -Storing of file information by CentralServer now works
 
+
+instructions for Hayden: 
+  Integrate HostClient into the GUI so the GUI gives the information for HostClient to send to the server
+  Make connect, retrieve and quit command for HostClient
+  
+
+
 To do:
 
 -Integrate HostClient into GUI, so the user can use the GUI to give the HostClient the information to send to the CentralServer
