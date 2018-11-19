@@ -1,30 +1,17 @@
 # Data-Comm-Proj-2
 
-Looking at the project requirements again, there were a  few things I interpretated incorrectly. I updated the to-do list with how I currently plan to implement the features. -Edward
+
+Current state of project:
+HostClient now sends user info which is collected and added to a textfile by the CentralServer. The CentralServer uses this textfile to store user info like a table. The textfile is updated each time a new unique hostname connects to the CentralServer. CentralServer reads the textfile into an array list of User objects, essentially making a table of user information. 
+HostClient now also sends the information for a textfile containing a list of files the user wants to share and a series of keywords describing the file. CentralServer is receiving this information, but doesn't store it like the user information yet. This is in progress. -Edward
 
 To do:
 
-Host:
--Create p2p hosts that have both client and server functionality and can download from eachother
+-Integrate HostClient into GUI, so the user can use the GUI to give the HostClient the information to send to the CentralServer
+-make CentralServer save file information (with the hostname of the file's owner) into a textfile
+-use this to populate an arraylist of SharedFile objects, each object containing relevant file information
+-search function that searches through the list of files, and pulls out relevant results based on the keyword sent by the user and looking for matches in the file descriptions
+-CentralServer will then return these relevant matches and as well as the hostname and port information of the user who they belong to's FTP server, and send them back to be displayed on the GUI
+-GUI will display table of relevant results and information so the HostClient can use the FTP commands to retrieve the file
+-GUI/Main will have both a HostClient and HostServer, a server that allows other users using our program to retrieve files from the user running it. 
 
--Create a gui for the p2p hosts that allow you to enter in the information used by server and use the search
-
--send that information for use by the central server
-
--have it read a text file containing the names of the files in the directory and their descriptions and send them to the central server
-
--create a panel on our host GUI table to display the entries returned by the central server after a keyword search
-(possibly sending the entries back in the form of an object arraylist, with each object containg the information for each row of the table) 
-
-Central Server:
-
--After a host connects, collects information sent by host to be stored in user table 
-
--takes list of files and their descriptions, and stores them (also possibly as an object arraylist, with each object containing the file name and description as string values)
-
--searches through file descriptions for keywords, and returns relevant entries back to the host along with hostname and username of uploader
-
-
-
-Current state of project:
-HostClient collects username, hostname, and speed, and list of files (in string form) from its directory and sends them to CentralServer - Edward
