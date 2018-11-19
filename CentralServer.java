@@ -48,7 +48,7 @@ class ClientHandler extends Thread
     private String hostName;
 	private String ourFileName;
 	private String description;
-	private String fileHostname;
+	private String fileHostName;
     private String speed;
     private Boolean inTable = false;
 	private Boolean exists;
@@ -106,12 +106,12 @@ class ClientHandler extends Thread
 			FileInputStream tableContents = new FileInputStream(fileTable);
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(tableContents));
             while ((fileLine = fileReader.readLine()) != null) {
-				String [] fileInfo = fileLine.split(":");
-				ourFileName = fileInfo[0];
-				description = fileInfo[1];
-				fileHostname = fileInfo[2];
-				sharedFileList.add(new SharedFile(ourFileName,description,fileHostname));
-
+                StringTokenizer fileTokens = new StringTokenizer(fileLine,":");
+				ourFileName = fileTokens.nextToken();
+				description = fileTokens.nextToken();
+				fileHostName = fileTokens.nextToken();
+				sharedFileList.add(new SharedFile(ourFileName,description,fileHostName));
+				
 				
 			}
 			tableContents.close();
@@ -156,20 +156,34 @@ class ClientHandler extends Thread
             }
             userTableWriter.flush();
         
+			
+			
 			String modifiedSentence;
 			String portMessage = inFromClient.readLine();
 			port = Integer.parseInt(portMessage);
 			Socket dataSocket = new Socket(connectionSocket.getInetAddress(), port);
-			DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));;
+			DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
+			String[] parts;
 			do {
 				modifiedSentence = inData.readLine();
 				if (modifiedSentence != null){
 					System.out.println(modifiedSentence);
-				    modifiedSentence = (modifiedSentence + "\n");
+					modifiedSentence = modifiedSentence + ":" + hostName;
+					parts = modifiedSentence.split(":");		
+					ourFileName = parts[0];
+					description = parts[1];
+					fileHostName = hostName;
+                	sharedFileList.add( new SharedFile(ourFileName,description,fileHostName) );
 					}
 				} while(modifiedSentence != null);
 			dataSocket.close();
 
+            FileWriter fileTableWriter = new FileWriter("fileTable.txt");
+            for (int i = 0; i < sharedFileList.size(); i++){
+                tempString = sharedFileList.get(i) + "" + '\n';
+                fileTableWriter.write(tempString);
+            }
+            fileTableWriter.flush();
 		
 		
 		
