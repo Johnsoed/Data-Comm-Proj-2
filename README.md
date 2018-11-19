@@ -15,7 +15,7 @@ To do:
 
 -search function that searches through the list of files, and pulls out relevant results based on the keyword sent by the user and looking for matches in the file descriptions
 
--CentralServer will then return these relevant matches and as well as the hostname and port information of the user who they belong to's FTP server, and send them back to be displayed on the GUI
+-CentralServer will then return these relevant matches and as well as the hostname and port information of the user who they belong to's FTP server, and send them back to be displayed on the GUI's table
 
 -GUI will display table of relevant results and information so the HostClient can use the FTP commands to retrieve the file
 
