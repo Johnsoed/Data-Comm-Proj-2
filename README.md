@@ -4,6 +4,7 @@
 Current state of project:
 HostClient now sends user info which is collected and added to a textfile by the CentralServer. The CentralServer uses this textfile to store user info like a table. The textfile is updated each time a new unique hostname connects to the CentralServer. CentralServer reads the textfile into an array list of User objects, essentially making a table of user information. 
 HostClient now also sends the information for a textfile containing a list of files the user wants to share and a series of keywords describing the file. CentralServer is receiving this information, but doesn't store it like the user information yet. This is in progress. See recent commits for more details and info on compiling -Edward
+
 -Storing of file information by CentralServer now works
 
 To do:
