@@ -1,5 +1,5 @@
 package edu.gvsu.cs351.conversion;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
+
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -200,7 +200,7 @@ public class Main implements ActionListener {
                 c.gridy = 1;
                 TopPanel.add(hostname,c);
                 c.fill = GridBagConstraints.HORIZONTAL;
-                c.weightx = 0.5;
+                c.weightx = 1;
                 c.gridx= 3;
                 c.gridy = 1;
                 TopPanel.add(host,c);
@@ -265,7 +265,7 @@ public class Main implements ActionListener {
             String searchwrod = key.getText();
             int x = storage.getRowCount();
             System.out.println(x);
-            for( int y = 0; y < x; y++){
+            for( int y = x-1; y >= 0; y--){
                 storage.removeRow(y);
             }
             ArrayList<String> table= hostClient.Search(searchwrod);
