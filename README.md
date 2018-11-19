@@ -8,10 +8,16 @@ HostClient now also sends the information for a textfile containing a list of fi
 To do:
 
 -Integrate HostClient into GUI, so the user can use the GUI to give the HostClient the information to send to the CentralServer
+
 -make CentralServer save file information (with the hostname of the file's owner) into a textfile
+
 -use this to populate an arraylist of SharedFile objects, each object containing relevant file information
+
 -search function that searches through the list of files, and pulls out relevant results based on the keyword sent by the user and looking for matches in the file descriptions
+
 -CentralServer will then return these relevant matches and as well as the hostname and port information of the user who they belong to's FTP server, and send them back to be displayed on the GUI
+
 -GUI will display table of relevant results and information so the HostClient can use the FTP commands to retrieve the file
+
 -GUI/Main will have both a HostClient and HostServer, a server that allows other users using our program to retrieve files from the user running it. 
 
