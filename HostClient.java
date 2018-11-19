@@ -53,11 +53,26 @@ class HostClient {
 			speed = inFromUser.readLine();
 			initialMessage = userName + " " + hostName + " " + speed + '\n';
 			outToServer.writeBytes(initialMessage);
-			
-			String listFiles = getFiles();
-            listFiles = listFiles + '\n';
-            outToServer.writeBytes(listFiles);
-            
+
+				
+			File sharedF = new File("sharedFiles.txt");
+			FileInputStream fileContents = new FileInputStream(sharedF);
+			BufferedReader fileReader = new BufferedReader(new InputStreamReader(fileContents));
+			port = port + 2;
+ 			outToServer.writeBytes(port + "" + '\n');
+			ServerSocket sendData = new ServerSocket(port);
+			Socket dataSocket = sendData.accept();
+			System.out.println("Data Socket opened.");
+			DataOutputStream dataOutToServer = new DataOutputStream(dataSocket.getOutputStream());
+			String fileLine;
+			while ((fileLine = fileReader.readLine()) != null) {
+					fileLine = (fileLine + "\n");
+					dataOutToServer.writeBytes(fileLine);
+					}
+
+			dataSocket.close();
+			fileContents.close();
+			sendData.close();
 			
 			
 			sentence = "quit";
@@ -67,45 +82,13 @@ class HostClient {
 			
 			
 			if (sentence.equals("list")) {
-			    port = port + 2;
-			    System.out.println(port);
-			    outToServer.writeBytes(port + " " + sentence + " " + '\n');
-			    ServerSocket welcomeData = new ServerSocket(port);
-			    Socket dataSocket = welcomeData.accept();
-
-			    DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
-
-			    System.out.println("There is data to read");
-			    modifiedSentence = inData.readLine();
-			    System.out.println("Listing Files: ");
-			    System.out.println(modifiedSentence);
-
-			    welcomeData.close();
-			    dataSocket.close();
 
 
-			} else if (sentence.startsWith("retr ")) {
-			    StringTokenizer tokens2 = new StringTokenizer(sentence);
-			    tokens2.nextToken();
-			    String filename = tokens2.nextToken();
-			    port = port + 2;
-			    System.out.println(port);
-			    outToServer.writeBytes(port + " " + sentence + " " + '\n');
-			    ServerSocket welcomeData = new ServerSocket(port);
-				FileWriter fw = new FileWriter(filename);
-			    Socket dataSocket = welcomeData.accept();
-			    DataInputStream inData = new DataInputStream(new BufferedInputStream(dataSocket.getInputStream()));
-				do {
-				    modifiedSentence = inData.readLine();
-					if (modifiedSentence != null)
-					{
-				    modifiedSentence = (modifiedSentence + "\n");
-					fw.write(modifiedSentence);
-					}
-				} while(modifiedSentence != null);
-				  fw.flush();
-				  dataSocket.close();
-			      welcomeData.close();
+
+			} 
+				
+				else if (sentence.startsWith("retr ")) {
+
 
 	        	} 
 

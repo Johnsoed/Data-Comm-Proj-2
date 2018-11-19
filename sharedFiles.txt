@@ -1,0 +1,3 @@
+albums.txt:files music albums metal
+books.txt:files books literature fiction
+movies.txt: files movies actors
