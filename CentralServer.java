@@ -61,6 +61,7 @@ class ClientHandler extends Thread
     ArrayList<User> userList = new ArrayList<User>();
     ArrayList<String> hostList = new ArrayList<String>();
     ArrayList<SharedFile> sharedFileList = new ArrayList<SharedFile>();
+    ArrayList<String> searchResults = new ArrayList<String>();
 	
     public ClientHandler(Socket socket) {
 
@@ -197,6 +198,7 @@ class ClientHandler extends Thread
 			frstln = commandTokens.nextToken();
 			port = Integer.parseInt(frstln);
 			clientCommand = commandTokens.nextToken();
+			System.out.println(clientCommand);
 
 
             
@@ -204,8 +206,40 @@ class ClientHandler extends Thread
 			
 			
 			
-			if (clientCommand.equals("list")) {
-
+			if (clientCommand.equals("search")) {
+                System.out.println("hi");
+                String keyword = "files";
+                keyword = commandTokens.nextToken();
+                String tempSpeed = "none";
+                String tempDescription;
+                for (int i = 0; i < sharedFileList.size(); i++){
+                    tempDescription = sharedFileList.get(i).description;
+                    if(tempDescription.contains(keyword)){
+                    for (int j = 0; j < userList.size(); j++){
+                        if(userList.get(j).hostName.equals(sharedFileList.get(i).hostName)){
+                            tempSpeed = userList.get(j).connectionSpeed;
+                        }
+                    }
+                    System.out.println(sharedFileList.get(i).fileName + " " + sharedFileList.get(i).hostName + 
+                    " " + tempSpeed);
+                    searchResults.add(sharedFileList.get(i).fileName + " " + sharedFileList.get(i).hostName + 
+                    " " + tempSpeed);
+                    }
+                }
+                
+                Socket searchSocket = new Socket(connectionSocket.getInetAddress(), port);
+                DataOutputStream searchData = new DataOutputStream(searchSocket.getOutputStream());
+                
+                
+                for (int k = 0; k < searchResults.size(); k++){
+                tempString = searchResults.get(k) + "" + '\n';
+                System.out.println(tempString);
+                searchData.writeBytes(tempString);
+                    }
+                searchSocket.close();
+                searchResults.clear();
+                
+            
 			}
 			
 
@@ -225,8 +259,9 @@ class ClientHandler extends Thread
 			connectionSocket.close();
 		    }
         }
-	catch (Exception ioEX)
+	catch (Exception e)
 	    {
+            e.printStackTrace();
 			String inetadd = "" + connectionSocket.getInetAddress();
 			System.out.println("\n" + inetadd.substring(1) + " has disconnected");
 			try {
