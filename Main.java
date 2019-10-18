@@ -1,4 +1,4 @@
-package edu.gvsu.cs351.conversion;
+package mainClient;
 
 
 import javax.swing.JFrame;

@@ -1,4 +1,4 @@
-package edu.gvsu.cs351.conversion;
+package mainClient;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -9,15 +9,17 @@ public class HostClient {
 
     private Socket ControlSocket;
     private int port;
+    private int portFTP;
     private DataOutputStream outToServer;
-
+	private Socket ftpSocket;
+    private DataOutputStream ftpOut;
+    private DataInputStream ftpIn;
 
     public void createa(String ips, String ports, String users, String hosts, String speeds) {
         String sentence;
         String userName;
         String hostName;
         String speed;
-        String modifiedSentence = "";
         String initialMessage;
         boolean isOpen = true;
         int number = 1;
@@ -28,6 +30,11 @@ public class HostClient {
         String serverName;
         int connectPort;
         ControlSocket = null;
+		ftpSocket = null;
+		ftpOut = null;
+		ftpIn = null;
+
+
 
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
@@ -113,17 +120,74 @@ public class HostClient {
 
     public String commands(String sentence) {
        if (sentence.startsWith("connect")) {
+			String serverNameFTP;
+			StringTokenizer FTPTokens = new StringTokenizer(sentence);
+	    	serverNameFTP = FTPTokens.nextToken(); //passes connect command
+	    	serverNameFTP = FTPTokens.nextToken();
+			portFTP = Integer.parseInt(FTPTokens.nextToken());
 
-
-           return "Connected to "+ sentence.subSequence(sentence.lastIndexOf(" "),sentence.length() -1);
+		   
+		  	try {
+		   		ftpSocket = new Socket(serverNameFTP, portFTP);
+                ftpOut = new DataOutputStream(ftpSocket.getOutputStream());
+                ftpIn = new DataInputStream(new BufferedInputStream(ftpSocket.getInputStream()));
+			}
+		   	catch (IOException ioEx)
+			{
+		    ioEx.printStackTrace();
+			}
+		   
+           return ("You are now connected to " + serverNameFTP);
         }
 
         else if (sentence.startsWith("retr ")){
+            try{
+                ftpIn = new DataInputStream(new BufferedInputStream(ftpSocket.getInputStream()));
+                String modifiedSentence = "";
+                StringTokenizer tokens2 = new StringTokenizer(sentence);
+			    tokens2.nextToken();
+			    String filename = tokens2.nextToken();
+			    portFTP = portFTP + 2;
+			    System.out.println(portFTP);
+			    ftpOut.writeBytes(portFTP + " " + sentence + '\n');
+			    ServerSocket welcomeData = new ServerSocket(portFTP);
+				FileWriter fw = new FileWriter(filename);
+			    Socket retrSocket = welcomeData.accept();
+                DataInputStream retrData = new DataInputStream(new BufferedInputStream(retrSocket.getInputStream()));
+				do {
+				    modifiedSentence = retrData.readLine();
+					if (modifiedSentence != null)
+					{
+				    modifiedSentence = (modifiedSentence + '\n');
+					fw.write(modifiedSentence);
+					}
+				} while(modifiedSentence != null);
+                    fw.flush();
+                    retrSocket.close();
+                    welcomeData.close();
+                    ftpOut.flush();
+                    }
+                    catch(Exception e){
+                        System.out.println("something went wrong");
+                    }
+        
+        
 
             return "Successfully downloaded " + sentence.subSequence(sentence.lastIndexOf(" "),sentence.length() );
         }
 
         else if (sentence.equals("quit")) {
+        
+        try{
+                System.out.print("qutting");
+                System.out.println(portFTP + " " + sentence + '\n');
+                ftpOut.writeBytes(portFTP + " " + sentence + '\n');
+                ftpSocket.close();
+            }
+            catch(Exception quiteE){
+            System.out.println("something when wrong quitting");
+            }
+                
 
 
            return "Disconnected from server";
